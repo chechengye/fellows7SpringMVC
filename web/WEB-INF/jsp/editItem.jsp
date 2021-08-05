@@ -12,7 +12,7 @@
 <body> 
 	<!-- 上传图片是需要指定属性 enctype="multipart/form-data" -->
 	<!-- <form id="itemForm" action="" method="post" enctype="multipart/form-data"> : 表单中若有图片或文件上传相关必要属性 -->
-	<form id="itemForm"	action="${pageContext.request.contextPath }/updateItem.do?status=true" method="post" enctype="multipart/form-data">>
+	<form id="itemForm"	action="${pageContext.request.contextPath }/updateItem.do" method="post">
 		<input type="hidden" name="id" value="${item.id }" /> 修改商品信息：
 		<table width="100%" border=1>
 			<tr>
@@ -31,7 +31,7 @@
 			</tr>
 
 
-			<tr>
+			<%--<tr>
 				<td>商品图片</td>
 				<td>
 					<c:if test="${item.pic !=null}">
@@ -40,7 +40,7 @@
 					</c:if>
 					<input type="file"  name="pictureFile"/> 
 				</td>
-			</tr>
+			</tr>--%>
 
 			<tr>
 				<td>商品简介</td>

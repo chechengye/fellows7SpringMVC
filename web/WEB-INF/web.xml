@@ -23,4 +23,20 @@
         <!--以任何字符开始必须以 .do 结尾   SpringMVC独有的 Struts  映射路径/路由  *.action -->
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
+
+
+    <!--过滤器配置 SpringMVC推荐使用-->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
 </web-app>

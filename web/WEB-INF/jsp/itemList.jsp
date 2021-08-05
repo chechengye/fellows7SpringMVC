@@ -10,34 +10,39 @@
 </head>
 <body> 
 <form action="${pageContext.request.contextPath }/item/queryitem.action" method="post">
-查询条件：
-<table width="100%" border=1>
-<tr>
-<td><input type="submit" value="查询"/></td>
-</tr>
-</table>
-商品列表：
-<table width="100%" border=1>
-<tr>
-	<td>商品名称</td>
-	<td>商品价格</td>
-	<td>生产日期</td>
-	<td>商品描述</td>
-	<td>操作</td>
-</tr>
-<c:forEach items="${itemList }" var="item">
-<tr>
-	<td>${item.name }</td>
-	<td>${item.price }</td>
-	<td>${item.createtime}</td>
-	<td>${item.detail }</td>
-	
-	<td><a href="${pageContext.request.contextPath }/getItemById.do?id=${item.id}">修改</a></td>
+	查询条件：
+	<table width="100%" border=1>
+	<tr>
+	<td><input type="submit" value="查询"/></td>
+	</tr>
+	</table>
+</form>
+<form action="${pageContext.request.contextPath }/deleteItem.do">
+	商品列表：
+	<table width="100%" border=1>
+	<tr>
+		<td><input type="checkbox"></td>
+		<td>商品名称</td>
+		<td>商品价格</td>
+		<td>生产日期</td>
+		<td>商品描述</td>
+		<td>操作</td>
+	</tr>
+	<c:forEach items="${itemList }" var="item">
+	<tr>
+		<td><input type="checkbox" name="ids" value="${item.id}"></td>
+		<td>${item.name }</td>
+		<td>${item.price }</td>
+		<td>${item.createtime}</td>
+		<td>${item.detail }</td>
 
-</tr>
-</c:forEach>
+		<td><a href="${pageContext.request.contextPath }/getItemById.do?item_id=${item.id}&name=${item.name}&status=1">修改</a></td>
 
-</table>
+	</tr>
+	</c:forEach>
+
+	<td><input type="submit" value="删除"/></td>
+	</table>
 </form>
 </body>
 
