@@ -9,7 +9,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
     <!--目录扫描，确定可以使用注解的目录-->
-    <context:component-scan base-package="com.lovecoding.controller"/>
+    <context:component-scan base-package="com.lovecoding"/>
 
     <!--配置数据源-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"></bean>
@@ -17,5 +17,24 @@
     <!--配置JDBC模板对象-->
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--配置视图解析器-->
+    <bean id="resourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--配置前缀以什么开始-->
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <!--配置后缀以什么结束-->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+
+    <!--配置Mybatis SQL会话工厂-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:com/lovecoding/mybatis/sqlMapConfig.xml"></property>
+    </bean>
+    <!--配置Mapper基本包扫描-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lovecoding.mapper"></property>
     </bean>
 </beans>

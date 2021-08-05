@@ -1,6 +1,7 @@
 package com.lovecoding.controller;
 
 import com.lovecoding.pojo.Item;
+import com.lovecoding.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +18,7 @@ import java.util.List;
  * @Controller :
  *      1、可以将类注入到Spring容器中
  *      2、可以标识此类是一个控制层的类
+ * @RequestMapping : 可以作用于方法。此时针对于一张表的CURD都可以放在一个控制类中进行映射接收处理了。
  */
 @Controller
 public class ItemController {
@@ -24,6 +26,9 @@ public class ItemController {
     @Autowired
     JdbcTemplate jt;
 
+
+    @Autowired
+    ItemService itemService;
     /**
      * 相当于Servlet中 @WebServlet(urlParttern = "/itemList")
      * 由于在配置文件中加了以.do结尾，所以路由必须编写。否则找寻不到.
@@ -52,9 +57,26 @@ public class ItemController {
         ModelAndView mav = new ModelAndView();
 
         mav.addObject("itemList" , itemList);
-        mav.setViewName("WEB-INF/jsp/itemList.jsp");//跳转到某一个视图
+        mav.setViewName("itemList");//跳转到某一个视图
 
         return mav;//封装好的对象需要返回才可以被执行。相当于 - forward(req , resp)
+    }
+
+    /**
+     * SpringMVC的入参直接支持基本数据类型与引用类型
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getItemById.do")
+    public ModelAndView getItemById(Integer id){
+        //String id = req.getParameter("id");
+        System.out.println("id = " + id);
+        Item item = itemService.getItemById(id);
+        System.out.println("item = " + item);
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("item" , item);
+        mav.setViewName("editItem");
+        return mav;
     }
 
 }
