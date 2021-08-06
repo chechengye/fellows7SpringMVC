@@ -45,5 +45,21 @@
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!--默认文件大小单位是B 5* 1024 * 1024   限制5M大小-->
         <property name="maxUploadSize" value="5242880"></property>
+
     </bean>
+
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.lovecoding.interceptor.MyInterceptor1"></bean>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.lovecoding.interceptor.MyInterceptor2"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!--开启MVC的注解驱动。会默认加载一些组件配置-->
+    <mvc:annotation-driven/>
 </beans>

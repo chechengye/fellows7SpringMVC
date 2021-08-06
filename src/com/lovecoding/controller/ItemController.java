@@ -9,9 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -172,5 +170,21 @@ public class ItemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 接收Json格式数据
+     * @RequestBody : 接收前端传递的Json数据。比如 添加功能方法
+     * @ResponseBody : 可以将返回的参数 对象、列表、Map等等 自动转换为Json格式
+     * 注意： 通常 表单参数 与Json格式参数不建议放在一个方法的参数中。
+     */
+
+    @RequestMapping(value = "/itemJson.do" , method = RequestMethod.POST)
+    @ResponseBody
+    public Item testJson(@RequestBody Item item){
+        System.out.println("item = " + item);
+
+        item.setName("修改后的Item");
+        return item;
     }
 }
