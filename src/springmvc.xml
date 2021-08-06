@@ -37,4 +37,13 @@
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.lovecoding.mapper"></property>
     </bean>
+
+    <!--将全局的异常处理器进行配置-->
+   <!-- <bean id="myHandlerExceptionResolver" class="com.lovecoding.config.MyHandlerExceptionResolver"/>
+-->
+    <!--配置图片上传的解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--默认文件大小单位是B 5* 1024 * 1024   限制5M大小-->
+        <property name="maxUploadSize" value="5242880"></property>
+    </bean>
 </beans>

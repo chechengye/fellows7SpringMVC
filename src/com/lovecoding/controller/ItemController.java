@@ -1,20 +1,29 @@
 package com.lovecoding.controller;
 
+import com.lovecoding.common.Constants;
 import com.lovecoding.pojo.Item;
 import com.lovecoding.service.ItemService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +33,7 @@ import java.util.List;
  * @RequestMapping : 可以作用于方法。此时针对于一张表的CURD都可以放在一个控制类中进行映射接收处理了。
  */
 @Controller
+//@RequestMapping("item")
 public class ItemController {
 
     @Autowired
@@ -77,7 +87,7 @@ public class ItemController {
      * @param id
      * @return
      */
-    @RequestMapping("/getItemById.do")
+    @RequestMapping(value = {"/getItemById.do" , "/itemById.do"} , method = RequestMethod.GET)
     public ModelAndView getItemById(@RequestParam(value = "item_id" ) Integer itemId
             , @RequestParam(value = "name" , required = false) String name
             , @RequestParam(value = "pageNum" , required = false , defaultValue = "1") Integer pageNum , Boolean status){
@@ -97,11 +107,40 @@ public class ItemController {
      * 对象类型，也可以直接从前端接收到
      * 推荐使用Model和String 配合 由Model向域中存值，用String来控制跳转页面。
      * 无需实例化对象，由Tomcat引擎帮我们实例化好了Model对象
+     *
+     * MultipartFile ： 用来接收图片相关
      * @return
      */
-    @RequestMapping("/updateItem.do")
-    public String updateItem(Model model , Item item ){
-        System.out.println("item = " + item);
+    @RequestMapping(value = "/updateItem.do" , method = {RequestMethod.POST})
+    public String updateItem(@RequestParam(value = "pictureFile" , required = false) MultipartFile pictureFile  , Model model , Item item , HttpServletRequest req){
+
+        try {
+            System.out.println("item = " + item);
+            //1、接收前端上传的文件
+            System.out.println("pictureFile : " + pictureFile);
+            //2、获取图片存储的真实路径
+            String realPath = req.getServletContext().getRealPath(Constants.UPLOAD_URL);
+            System.out.println("realPath = " + realPath);
+            //3、修改图片名称,防止多张图片重名的问题
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddhhmmssSSS");
+            String fileNewName = df.format(new Date());
+            //4、通过文件工具类获取文件扩展名 png  不会携带.
+            String extension = FilenameUtils.getExtension(pictureFile.getOriginalFilename());
+            System.out.println("extension = " + extension);
+            //5、拼接新文件名称
+            String newOriginalFilename = fileNewName + "." + extension;
+            System.out.println("newOriginalFilename = " + newOriginalFilename);
+            //6、上传到服务端、wind上传到磁盘目录
+            pictureFile.transferTo(new File(realPath + "/" +newOriginalFilename));
+            //7、将相对路径存于数据库
+            item.setPic(Constants.UPLOAD_URL + "/" + newOriginalFilename);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         int rows = itemService.updateItem(item);
         if(rows > 0){
             List<Item> itemList = itemService.getItemList();
@@ -120,5 +159,18 @@ public class ItemController {
             model.addAttribute("itemList" , itemList);
         }
         return "itemList";
+    }
+
+    /**
+     * void : 接收异步请求，数据返回不存于域中
+     *
+     */
+    @RequestMapping("/ajax")
+    public void testFn(HttpServletResponse resp){
+        try {
+            resp.getWriter().write("{]\"name\":\"小米\"}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

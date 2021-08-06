@@ -5,7 +5,7 @@
 <mapper namespace="com.lovecoding.mapper.ItemMapper">
 
     <sql id="Base_Items_Case">
-        i.id , i.name , i.price , i.detail , i.createtime
+        i.id , i.name , i.price , i.detail , i.createtime , i.pic
     </sql>
     <select id="getItemById" resultType="Item" parameterType="Integer">
         select
@@ -26,6 +26,9 @@
                 </if>
                 <if test='detail != null and detail != ""'>
                     detail = #{detail} ,
+                </if>
+                <if test='pic != null and pic != ""'>
+                    pic = #{pic} ,
                 </if>
                 <if test='createtime != null and createtime != ""'>
                     createtime = #{createtime} ,
